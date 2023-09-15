@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "126165042634",
+    "project_id": "isaac-global-careplz",
+    "storage_bucket": "isaac-global-careplz.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126165042634:android:68fc08fda6d4f10eddfb33",
+        "android_client_info": {
+          "package_name": "com.cnjmonster.isaacglobal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126165042634-ev6s0r8o571l4lqmh2l7ubff13gqka4m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cnjmonster.isaacglobal",
+            "certificate_hash": "a4b28ee7ce03dba39631eb330ac31fd621389d73"
+          }
+        },
+        {
+          "client_id": "126165042634-sd6rm3rm19smd45jui5g8gaq6oeac7bd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkbLVDOOmMt7HOgFMukt9nFSD6mNYE02o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126165042634-i8vcea8sf5l8vn666rti14g97g70vgu2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "126165042634-fgisnffhgdqj62cbldcc5i1sm0c2m03n.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.cnjmonster.isaacglobal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

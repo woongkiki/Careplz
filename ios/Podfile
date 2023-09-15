@@ -1,0 +1,42 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, '13.0'
+
+
+target 'IsaacGlobal' do
+  config = use_native_modules!
+
+  permissions_path = '../node_modules/react-native-permissions/ios'
+  pod 'Permission-Camera', :path => "#{permissions_path}/Camera"
+  pod 'Permission-Microphone', :path => "#{permissions_path}/Microphone"
+  pod 'Permission-BluetoothPeripheral', :path => "#{permissions_path}/BluetoothPeripheral"
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => false
+  )
+
+  target 'IsaacGlobalTests' do
+    inherit! :complete
+    # Pods for testing
+    pod 'LineSDKSwift', '~> 5.8.1'
+    #pod 'LineSDKSwift/ObjC', '~> 5.0'
+    pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+    #pod 'SendBirdCalls'
+  end
+
+  # Enables Flipper.
+  #
+  # Note that if you have use_frameworks! enabled, Flipper will not work and
+  # you should disable the next line.
+  use_flipper!()
+  #use_frameworks! :linkage => :static
+
+  post_install do |installer|
+    react_native_post_install(installer)
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+  end
+end

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">케어해줘?</string>
+    <string name="kakao_app_key">a70f2ea4029286b4768b7325a4fee8e2</string>
+    <string name="line_channel_id" translatable="false">1660766231</string>
+    <string name="facebook_app_id">2143508609176378</string>
+    <string name="fb_login_protocol_scheme">fb2143508609176378</string>
+    <string name="facebook_client_token">676183264ef636fca66b91ca48694fed</string>
+</resources>

@@ -1,0 +1,468 @@
+diff --git a/node_modules/react-native-gifted-chat/lib/Avatar.js b/node_modules/react-native-gifted-chat/lib/Avatar.js
+index 70ce1d7..e71f6d3 100644
+--- a/node_modules/react-native-gifted-chat/lib/Avatar.js
++++ b/node_modules/react-native-gifted-chat/lib/Avatar.js
+@@ -6,7 +6,7 @@ import { StylePropType, isSameUser, isSameDay } from './utils';
+ const styles = {
+     left: StyleSheet.create({
+         container: {
+-            marginRight: 8,
++            marginRight: 10,
+         },
+         onTop: {
+             alignSelf: 'flex-start',
+@@ -15,7 +15,7 @@ const styles = {
+         image: {
+             height: 36,
+             width: 36,
+-            borderRadius: 18,
++            borderRadius: 36,
+         },
+     }),
+     right: StyleSheet.create({
+diff --git a/node_modules/react-native-gifted-chat/lib/Bubble.js b/node_modules/react-native-gifted-chat/lib/Bubble.js
+index 70b74ae..1365cf3 100644
+--- a/node_modules/react-native-gifted-chat/lib/Bubble.js
++++ b/node_modules/react-native-gifted-chat/lib/Bubble.js
+@@ -10,76 +10,79 @@ import { MessageAudio } from './MessageAudio';
+ import { Time } from './Time';
+ import Color from './Color';
+ import { StylePropType, isSameUser, isSameDay } from './utils';
++import { Box } from 'native-base';
++import { colorSelect } from '../../../src/common/StyleCommon';
+ const styles = {
+     left: StyleSheet.create({
+-        container: {
+-            flex: 1,
+-            alignItems: 'flex-start',
+-        },
+-        wrapper: {
+-            borderRadius: 15,
+-            backgroundColor: Color.leftBubbleBackground,
+-            marginRight: 60,
+-            minHeight: 20,
+-            justifyContent: 'flex-end',
+-        },
+-        containerToNext: {
+-            borderBottomLeftRadius: 3,
+-        },
+-        containerToPrevious: {
+-            borderTopLeftRadius: 3,
+-        },
+-        bottom: {
+-            flexDirection: 'row',
+-            justifyContent: 'flex-start',
+-        },
++      container: {
++        flex: 1,
++        marginRight: 100, // move from wrapper
++        alignItems: "flex-start",
++        marginBottom:10
++      },
++  
++      wrapper: {
++        borderRadius: 15,
++        backgroundColor: "#fff",
++        // marginRight: 60, remove
++        marginRight: -3,
++        minHeight: 20,
++        justifyContent: "flex-end",
++        paddingVertical:5,
++      },
++      containerToNext: {
++        borderBottomLeftRadius: 0,
++      },
++      containerToPrevious: {
++        borderTopLeftRadius: 0,
++      },
++      positions: {
++        marginLeft: 0,
++      },
+     }),
++  
+     right: StyleSheet.create({
+-        container: {
+-            flex: 1,
+-            alignItems: 'flex-end',
+-        },
+-        wrapper: {
+-            borderRadius: 15,
+-            backgroundColor: Color.defaultBlue,
+-            marginLeft: 60,
+-            minHeight: 20,
+-            justifyContent: 'flex-end',
+-        },
+-        containerToNext: {
+-            borderBottomRightRadius: 3,
+-        },
+-        containerToPrevious: {
+-            borderTopRightRadius: 3,
+-        },
+-        bottom: {
+-            flexDirection: 'row',
+-            justifyContent: 'flex-end',
+-        },
++      container: {
++        flex: 1,
++        alignItems: "flex-end",
++        marginLeft: 90, // move from wrapper
++        marginBottom:10
++      },
++      wrapper: {
++        borderRadius: 15,
++        backgroundColor: colorSelect.pink_de,
++        marginLeft: -3, //remove
++        minHeight: 20,
++        justifyContent: "flex-end",
++        paddingVertical:5,
++        
++      },
++    //   containerToNext: {
++    //     borderBottomRightRadius: 0,
++    //   },
++    //   containerToPrevious: {
++    //     borderTopRightRadius: 0,
++    //   },
++      positions: {
++        marginRight: 0,
++      },
+     }),
+-    content: StyleSheet.create({
+-        tick: {
+-            fontSize: 10,
+-            backgroundColor: Color.backgroundTransparent,
+-            color: Color.white,
+-        },
+-        tickView: {
+-            flexDirection: 'row',
+-            marginRight: 10,
+-        },
+-        username: {
+-            top: -3,
+-            left: 0,
+-            fontSize: 12,
+-            backgroundColor: 'transparent',
+-            color: '#aaa',
+-        },
+-        usernameView: {
+-            flexDirection: 'row',
+-            marginHorizontal: 10,
+-        },
+-    }),
+-};
++    bottom: {
++      // before:
++      // flexDirection: 'row',
++      // justifyContent: 'flex-end',
++      alignItems: "flex-end",
++    },
++    tick: {
++      fontSize: 10,
++      backgroundColor: "transparent",
++      color: "white",
++    },
++    tickView: {
++      flexDirection: "row",
++      marginRight: 10,
++    },
++  };
+ const DEFAULT_OPTION_TITLES = ['Copy Text', 'Cancel'];
+ export default class Bubble extends React.Component {
+     constructor() {
+@@ -226,14 +229,11 @@ export default class Bubble extends React.Component {
+         return null;
+     }
+     renderUsername() {
+-        const { currentMessage, user, renderUsername } = this.props;
++        const { currentMessage, user } = this.props;
+         if (this.props.renderUsernameOnMessage && currentMessage) {
+             if (user && currentMessage.user._id === user._id) {
+                 return null;
+             }
+-            if (renderUsername) {
+-                return renderUsername(currentMessage.user);
+-            }
+             return (<View style={styles.content.usernameView}>
+           <Text style={[styles.content.username, this.props.usernameStyle]}>
+             ~ {currentMessage.user.name}
+@@ -265,31 +265,54 @@ export default class Bubble extends React.Component {
+     }
+     render() {
+         const { position, containerStyle, wrapperStyle, bottomContainerStyle, } = this.props;
+-        return (<View style={[
+-                styles[position].container,
+-                containerStyle && containerStyle[position],
+-            ]}>
+-        <View style={[
+-                styles[position].wrapper,
+-                this.styledBubbleToNext(),
+-                this.styledBubbleToPrevious(),
+-                wrapperStyle && wrapperStyle[position],
+-            ]}>
+-          <TouchableWithoutFeedback onPress={this.onPress} onLongPress={this.onLongPress} accessibilityRole='text' {...this.props.touchableProps}>
+-            <View>
+-              {this.renderBubbleContent()}
+-              <View style={[
+-                styles[position].bottom,
+-                bottomContainerStyle && bottomContainerStyle[position],
+-            ]}>
+-                {this.renderUsername()}
++
++        let status = (
++            <View
++                style={[
++                    {alignItems:"flex-end"},
++                    styles[position].positions,
++                    bottomContainerStyle[position]
++                ]}
++            >
+                 {this.renderTime()}
+                 {this.renderTicks()}
+-              </View>
+             </View>
+-          </TouchableWithoutFeedback>
+-        </View>
+-        {this.renderQuickReplies()}
++        )
++        return (
++        <View style={[
++            styles[position].container,
++            containerStyle && containerStyle[position],
++        ]}>
++            {this.renderUsername()}
++            <View
++                style={[{
++                    flexDirection:"row",
++                    alignItems:'flex-end'
++                }]}
++            >
++                {position == 'left' ? null : status}
++                <Box
++                    style={[
++                        styles[position].wrapper,
++                        this.styledBubbleToNext(),
++                        this.styledBubbleToPrevious(),
++                        wrapperStyle && wrapperStyle[position],
++                    ]}
++                    shadow={4}
++                >
++                    <TouchableWithoutFeedback
++                        onLongPress={this.onLongPress}
++                        accessibilityTraits="text"
++                    >
++                        <View>
++                            {this.renderCustomView()}
++                            {this.renderMessageImage()}
++                            {this.renderMessageText()}
++                        </View>
++                    </TouchableWithoutFeedback>
++                </Box>
++                {position == "right" ? null : status}
++            </View>
+       </View>);
+     }
+ }
+diff --git a/node_modules/react-native-gifted-chat/lib/Day.js b/node_modules/react-native-gifted-chat/lib/Day.js
+index 476b290..c2abd13 100644
+--- a/node_modules/react-native-gifted-chat/lib/Day.js
++++ b/node_modules/react-native-gifted-chat/lib/Day.js
+@@ -6,31 +6,58 @@ import Color from './Color';
+ import { StylePropType, isSameDay } from './utils';
+ import { DATE_FORMAT } from './Constant';
+ import { useChatContext } from './GiftedChatContext';
++import { fsize } from '../../../src/common/StyleCommon';
++
++import moment from 'moment';
++
+ const styles = StyleSheet.create({
+     container: {
+         alignItems: 'center',
+         justifyContent: 'center',
+-        marginTop: 5,
+-        marginBottom: 10,
++        marginBottom: 15,
++        marginTop:15
+     },
+     text: {
+         backgroundColor: Color.backgroundTransparent,
+         color: Color.defaultColor,
+-        fontSize: 12,
+-        fontWeight: '600',
++        ...fsize.fs13,
++        color:'#fff'
+     },
++    wrapper: {
++        backgroundColor:'#434856',
++        borderRadius:10,
++        justifyContent:'center',
++        alignItems:'center',
++        padding:2,
++        paddingHorizontal:10
++    }
+ });
+ export function Day({ dateFormat = DATE_FORMAT, currentMessage, previousMessage, containerStyle, wrapperStyle, textStyle, }) {
+     const { getLocale } = useChatContext();
+     if (currentMessage == null || isSameDay(currentMessage, previousMessage)) {
+         return null;
+     }
++
++    const date = moment(currentMessage.createdAt);
++    const dow = date.day();
++
+     return (<View style={[styles.container, containerStyle]}>
+-      <View style={wrapperStyle}>
++      <View style={[styles.wrapper, wrapperStyle]}>
+         <Text style={[styles.text, textStyle]}>
+-          {dayjs(currentMessage.createdAt)
+-            .locale(getLocale())
+-            .format(dateFormat)}
++            {date.format('YYYY년 M월 D일 ')}
++            {dow === 1
++                ? '월요일'
++                : dow === 2
++                ? '화요일'
++                : dow === 3
++                ? '수요일'
++                : dow === 4
++                ? '목요일'
++                : dow === 5
++                ? '금요일'
++                : dow === 6
++                ? '토요일'
++                : dow === 7 && '일요일'}
+         </Text>
+       </View>
+     </View>);
+diff --git a/node_modules/react-native-gifted-chat/lib/Message.js b/node_modules/react-native-gifted-chat/lib/Message.js
+index 6202ad9..14e882c 100644
+--- a/node_modules/react-native-gifted-chat/lib/Message.js
++++ b/node_modules/react-native-gifted-chat/lib/Message.js
+@@ -10,10 +10,10 @@ const styles = {
+     left: StyleSheet.create({
+         container: {
+             flexDirection: 'row',
+-            alignItems: 'flex-end',
++            alignItems: 'center',
+             justifyContent: 'flex-start',
+-            marginLeft: 8,
+             marginRight: 0,
++            marginLeft:20,
+         },
+     }),
+     right: StyleSheet.create({
+@@ -22,7 +22,7 @@ const styles = {
+             alignItems: 'flex-end',
+             justifyContent: 'flex-end',
+             marginLeft: 0,
+-            marginRight: 8,
++            marginRight: 20,
+         },
+     }),
+ };
+diff --git a/node_modules/react-native-gifted-chat/lib/MessageText.js b/node_modules/react-native-gifted-chat/lib/MessageText.js
+index dd834d6..0be0deb 100644
+--- a/node_modules/react-native-gifted-chat/lib/MessageText.js
++++ b/node_modules/react-native-gifted-chat/lib/MessageText.js
+@@ -1,15 +1,20 @@
+ import PropTypes from 'prop-types';
+ import React from 'react';
+-import { Linking, StyleSheet, View, } from 'react-native';
++import { Linking, StyleSheet, TouchableOpacity, View, } from 'react-native';
+ // @ts-ignore
+ import ParsedText from 'react-native-parsed-text';
+ import { StylePropType } from './utils';
+ import { useChatContext } from './GiftedChatContext';
+ import { error } from './logging';
++import Font from '../../../src/common/Font';
++import { DefText } from '../../../src/common/BOOTSTRAP';
++import { Box } from 'native-base';
++import { fsize, fweight } from '../../../src/common/StyleCommon';
+ const WWW_URL_PATTERN = /^www\./i;
+ const { textStyle } = StyleSheet.create({
+     textStyle: {
+-        fontSize: 16,
++        ...fsize.fs14,
++        ...fweight.r,
+         lineHeight: 20,
+         marginTop: 5,
+         marginBottom: 5,
+@@ -108,7 +113,16 @@ export function MessageText({ currentMessage = {}, optionTitles = DEFAULT_OPTION
+             { type: 'phone', style: linkStyle, onPress: onPhonePress },
+             { type: 'email', style: linkStyle, onPress: onEmailPress },
+         ]} childrenProps={{ ...textProps }}>
+-        {currentMessage.text}
++        {
++            currentMessage.text.substring(0,4) == 'http' ?
++            <TouchableOpacity onPress={()=>Linking.openURL(currentMessage.text)}>
++                <Box borderBottomWidth={1} borderBottomColor='#fff'>
++                    <DefText text={currentMessage.upfile_name} style={[ position == 'right' ? {color:'#fff'} : {color:'black'}, {fontFamily:Font.SCoreDreamR, fontSize:16, lineHeight: 20, marginTop: 5, marginBottom: 0, marginLeft: 4, marginRight: 4,}]} />  
++                </Box>
++            </TouchableOpacity>
++            :
++            currentMessage.text
++        }
+       </ParsedText>
+     </View>);
+ }
+diff --git a/node_modules/react-native-gifted-chat/lib/Time.js b/node_modules/react-native-gifted-chat/lib/Time.js
+index 821a899..aa26d2b 100644
+--- a/node_modules/react-native-gifted-chat/lib/Time.js
++++ b/node_modules/react-native-gifted-chat/lib/Time.js
+@@ -6,16 +6,21 @@ import Color from './Color';
+ import { TIME_FORMAT } from './Constant';
+ import { StylePropType } from './utils';
+ import { useChatContext } from './GiftedChatContext';
++
++import moment from 'moment';
++
+ const { containerStyle } = StyleSheet.create({
+     containerStyle: {
+         marginLeft: 10,
+         marginRight: 10,
+         marginBottom: 5,
++        marginTop:5,
+     },
+ });
+ const { textStyle } = StyleSheet.create({
+     textStyle: {
+-        fontSize: 10,
++        fontSize: 11,
++        color:'#919191',
+         backgroundColor: 'transparent',
+         textAlign: 'right',
+     },
+@@ -42,6 +47,23 @@ const styles = {
+ };
+ export function Time({ position = 'left', containerStyle, currentMessage, timeFormat = TIME_FORMAT, timeTextStyle, }) {
+     const { getLocale } = useChatContext();
++
++    const date = moment(currentMessage.createdAt);
++    let times = date.hour();
++    let min = date.minute();
++  
++    if(times > 12){
++        times = times - 12;
++    }else{
++        times = times;
++    }
++
++    if(min > 10){
++        min = min;
++    }else{
++        min = "0" + min;
++    }
++
+     if (currentMessage == null) {
+         return null;
+     }
+@@ -53,7 +75,9 @@ export function Time({ position = 'left', containerStyle, currentMessage, timeFo
+             styles[position].text,
+             timeTextStyle && timeTextStyle[position],
+         ]}>
+-        {dayjs(currentMessage.createdAt).locale(getLocale()).format(timeFormat)}
++        {/* {dayjs(currentMessage.createdAt).locale(getLocale()).format(timeFormat)} */}
++        {times < 12 ? "오후 " : "오전 "}
++        {times + ":" + min}
+       </Text>
+     </View>);
+ }
